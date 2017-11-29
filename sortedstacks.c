@@ -37,10 +37,18 @@ pile *stack_from_array(const int *array, size_t nmemb);
 /* Afficher p, en le dépilant */
 void depiler_afficher(pile *p);
 
+/* Copies the stack q into another stack and returns it */
+pile *copier_pile(pile *p);
+
+
+/* Merges p_ and q_ (sorted), into a sorted stack, and returns it */
+pile *merge_sort_stack(pile *p, pile *q);
+
 int main(void)
 {
 	pile *p;
 	pile *q;
+	pile *r;
 	const int a[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
 	const int b[] = {1, 4, 6, 8, 10, 14, 16, 20, 21, 30, 32, 36};
 
@@ -48,11 +56,18 @@ int main(void)
 
 	p = stack_from_array(a, sizeof a / sizeof a[0]);
 	q = stack_from_array(b, sizeof b / sizeof b[0]);
+	r = merge_sort_stack(p, q);
 
 	puts("D\u00e9piler p...");
 	depiler_afficher(p);
 	puts("D\u00e9piler q...");
 	depiler_afficher(q);
+	puts("D\u00e9piler r...");
+	depiler_afficher(r);
+
+	free(p);
+	free(q);
+	free(r);
 
 	exit(EXIT_SUCCESS);
 }
@@ -64,6 +79,7 @@ pile *init_pile(void)
 		fputs("Problem with allocating memory.\n", stderr);
 		return NULL;
 	}
+	p->t = NULL;
 	return p;
 }
 
@@ -146,16 +162,65 @@ pile *stack_from_array(const int *array, size_t nmemb)
 
 void depiler_afficher(pile *p)
 {
-	int i;
-	for (i = 0; i < 20; ++i) {
-		int x = 123456;
-		if (!pile_vide(p))
-			x = sommet_pile(p);
-		else
-			break;
-		printf("%4d ", x);
+	while (!pile_vide(p)) {
+		printf("%4d ", sommet_pile(p));
 		depiler(p);
 	}
 	fputc('\n', stdout);
 	return;
+}
+
+pile *copier_pile(pile *p)
+{
+	pile *q;
+	pile *tmp;
+
+	q = init_pile();
+	tmp = init_pile();
+	while (!pile_vide(p)) {
+		int x = sommet_pile(p);
+		depiler(p);
+		empiler(tmp, x);
+	}
+	while (!pile_vide(tmp)) {
+		int x = sommet_pile(tmp);
+		depiler(tmp);
+		empiler(q, x);
+		empiler(p, x);
+	}
+	free(tmp);
+
+	return q;
+}
+
+pile *merge_sort_stack(pile *p_, pile *q_)
+{
+	pile *p = copier_pile(p_);
+	pile *q = copier_pile(q_);
+	pile *r = init_pile();
+
+	if (!(p && q && r))
+		return NULL;
+
+	while (!pile_vide(p) && !pile_vide(q)) {
+		int xp = sommet_pile(p);
+		int xq = sommet_pile(q);
+		if (xp > xq) {
+			empiler(r, xp);
+			depiler(p);
+		} else {
+			empiler(r, xq);
+			depiler(q);
+		}
+	}
+	while (!pile_vide(p)) {
+		empiler(r, sommet_pile(p));
+		depiler(p);
+	}
+	while (!pile_vide(q)) {
+		empiler(r, sommet_pile(q));
+		depiler(q);
+	}
+
+	return r;
 }

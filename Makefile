@@ -2,7 +2,7 @@ CC		= gcc
 CFLAGS		= -Wall -Wextra -Werror -std=c99 -pedantic -pedantic-errors
 CFLAGS		+= -O2 -march=native
 PROGNAME	= sortedstacks
-OBJS=$(PROGNAME).o
+OBJS		= $(PROGNAME).o
 
 .PHONY: all clean clean-all
 

@@ -30,7 +30,6 @@ slist *slist_remove_head(slist *list);
 /* Afficher une liste */
 void print_slist(slist *l);
 
-
 /* Creates and returns a stack with the elements of array */
 pile *stack_from_array(const int *array, size_t nmemb);
 
@@ -40,9 +39,9 @@ void depiler_afficher(pile *p);
 /* Copies the stack q into another stack and returns it */
 pile *copier_pile(pile *p);
 
-
 /* Merges p_ and q_ (sorted), into a sorted stack, and returns it */
 pile *merge_sort_stack(pile *p, pile *q);
+
 
 int main(void)
 {

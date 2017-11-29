@@ -9,10 +9,10 @@ struct slist {
 struct stack {
 	struct slist *t;
 };
-
 typedef struct stack stack;
 typedef struct stack pile;
 typedef struct slist slist;
+
 
 pile *init_pile(void);
 int pile_pleine(const pile *p);
@@ -220,6 +220,9 @@ pile *merge_sort_stack(pile *p_, pile *q_)
 		empiler(r, sommet_pile(q));
 		depiler(q);
 	}
+
+	free(p);
+	free(q);
 
 	return r;
 }

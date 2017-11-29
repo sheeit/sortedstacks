@@ -69,10 +69,8 @@ pile *init_pile(void)
 
 int pile_pleine(const pile *p)
 {
-	if (p)
-		return 0;
-	else
-		return 0;
+	/* This is just so we can avoid the "unused paramater" warning */
+	return 0 && p;
 }
 
 int pile_vide(const pile *p)
